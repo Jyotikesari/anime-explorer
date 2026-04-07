@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,40 @@
     <header>
         <h1>🎌 Anime Explorer</h1>
         <p>Discover your next favourite anime!</p>
+        <button id="theme-toggle">☀️ Light Mode</button>
     </header>
+
+    <div id="controls">
+
+        <input 
+            type="text" 
+            id="search-input" 
+            placeholder="🔍 Search anime..."
+        />
+
+        <select id="genre-filter">
+            <option value="all">🎭 All Genres</option>
+            <option value="Action">Action</option>
+            <option value="Romance">Romance</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Drama">Drama</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Horror">Horror</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+        </select>
+
+        <select id="sort-select">
+            <option value="score-desc">⭐ Score: High to Low</option>
+            <option value="score-asc">⭐ Score: Low to High</option>
+            <option value="title-asc">🔤 Title: A to Z</option>
+            <option value="title-desc">🔤 Title: Z to A</option>
+            <option value="episodes-desc">🎬 Episodes: High to Low</option>
+        </select>
+
+    </div>
+
+    <p id="results-count"></p>
 
     <div id="loading">Loading anime... please wait ⏳</div>
 
