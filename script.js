@@ -12,44 +12,41 @@ async function fetchAnime() {
     try {
         loading.style.display = "block";
 
-        const response = await fetch("https://api.jikan.moe/v4/top/anime?limit=25");
-        const data = await response.json();
+        const res = await fetch("https://api.jikan.moe/v4/top/anime?limit=25");
+        const data = await res.json();
 
         loading.style.display = "none";
 
         allAnime = data.data;
+        applyFiltersAndSort();
 
-        displayAnime(allAnime);
-
-    } catch (error) {
-        loading.textContent = "Something went wrong. Please try again!";
-        console.error(error);
+    } catch (err) {
+        loading.textContent = "Error loading data";
     }
 }
 
-function displayAnime(animeList) {
+function displayAnime(list) {
     animeContainer.innerHTML = "";
+    resultsCount.textContent = `Showing ${list.length} anime`;
 
-    resultsCount.textContent = `Showing ${animeList.length} anime`;
-
-    if (animeList.length === 0) {
-        animeContainer.innerHTML = `<p id="no-results">No anime found 😢</p>`;
+    if (list.length === 0) {
+        animeContainer.innerHTML = "<p>No anime found 😢</p>";
         return;
     }
 
-    animeList.map((anime) => {
+    list.forEach(anime => {
         const card = document.createElement("div");
         card.classList.add("anime-card");
 
         const genres = anime.genres.map(g => g.name).join(", ");
 
         card.innerHTML = `
-            <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
+            <img src="${anime.images.jpg.image_url}">
             <div class="anime-info">
                 <h3>${anime.title}</h3>
-                <p>⭐ Score: ${anime.score ?? "N/A"}</p>
-                <p>🎬 Episodes: ${anime.episodes ?? "N/A"}</p>
-                <p>🎭 ${genres || "N/A"}</p>
+                <p>⭐ ${anime.score ?? "N/A"}</p>
+                <p>🎬 ${anime.episodes ?? "N/A"}</p>
+                <p>${genres}</p>
             </div>
         `;
 
@@ -57,55 +54,44 @@ function displayAnime(animeList) {
     });
 }
 
-function searchAnime() {
+function applyFiltersAndSort() {
+    let result = allAnime;
+
     const query = searchInput.value.toLowerCase();
+    if (query) {
+        result = result.filter(a =>
+            a.title.toLowerCase().includes(query)
+        );
+    }
 
-    const filtered = allAnime.filter((anime) => 
-        anime.title.toLowerCase().includes(query)
-    );
+    const genre = genreFilter.value;
+    if (genre !== "all") {
+        result = result.filter(a =>
+            a.genres.some(g => g.name === genre)
+        );
+    }
 
-    applyFiltersAndSort(filtered);
-}
+    result = result.slice().sort((a, b) => {
+        const val = sortSelect.value;
 
-function filterByGenre(animeList) {
-    const selectedGenre = genreFilter.value;
+        if (val === "score-desc") return (b.score ?? 0) - (a.score ?? 0);
+        if (val === "score-asc") return (a.score ?? 0) - (b.score ?? 0);
+        if (val === "title-asc") return a.title.localeCompare(b.title);
+        if (val === "title-desc") return b.title.localeCompare(a.title);
+        if (val === "episodes-desc") return (b.episodes ?? 0) - (a.episodes ?? 0);
 
-    if (selectedGenre === "all") return animeList;
-
-    return animeList.filter((anime) =>
-        anime.genres.some((g) => g.name === selectedGenre)
-    );
-}
-
-function sortAnime(animeList) {
-    const sortValue = sortSelect.value;
-
-    return animeList.slice().sort((a, b) => {
-        if (sortValue === "score-desc") return (b.score ?? 0) - (a.score ?? 0);
-        if (sortValue === "score-asc") return (a.score ?? 0) - (b.score ?? 0);
-        if (sortValue === "title-asc") return a.title.localeCompare(b.title);
-        if (sortValue === "title-desc") return b.title.localeCompare(a.title);
-        if (sortValue === "episodes-desc") return (b.episodes ?? 0) - (a.episodes ?? 0);
+        return 0;
     });
-}
 
-function applyFiltersAndSort(animeList = allAnime) {
-    const searched = searchInput.value.toLowerCase()
-        ? animeList.filter(anime => anime.title.toLowerCase().includes(searchInput.value.toLowerCase()))
-        : animeList;
-
-    const filtered = filterByGenre(searched);
-    const sorted = sortAnime(filtered);
-
-    displayAnime(sorted);
+    displayAnime(result);
 }
 
 themeToggle.addEventListener("click", () => {
     const html = document.documentElement;
-    const isDark = html.getAttribute("data-theme") === "dark";
+    const dark = html.getAttribute("data-theme") === "dark";
 
-    html.setAttribute("data-theme", isDark ? "light" : "dark");
-    themeToggle.textContent = isDark ? "🌙 Dark Mode" : "☀️ Light Mode";
+    html.setAttribute("data-theme", dark ? "light" : "dark");
+    themeToggle.textContent = dark ? "🌙 Dark Mode" : "☀️ Light Mode";
 });
 
 searchInput.addEventListener("input", applyFiltersAndSort);
