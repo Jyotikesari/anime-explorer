@@ -26,7 +26,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    transition: background-color 0.3s, color 0.3s;
+    transition: 0.3s;
 }
 
 body {
@@ -42,61 +42,30 @@ header {
     border-bottom: 2px solid var(--accent);
 }
 
-header h1 {
-    font-size: 2.5rem;
-    color: var(--accent);
-}
-
-header p {
-    color: var(--subtext);
-    margin-top: 8px;
-}
-
 #theme-toggle {
     margin-top: 15px;
     padding: 8px 20px;
-    background-color: var(--accent);
+    background: var(--accent);
     color: white;
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 0.9rem;
 }
 
 #controls {
     display: flex;
-    flex-wrap: wrap;
     gap: 15px;
-    padding: 20px 30px;
-    background-color: var(--control-bg);
-    border-bottom: 1px solid var(--border);
+    padding: 20px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
-#search-input,
-#genre-filter,
-#sort-select {
-    padding: 10px 15px;
+input, select {
+    padding: 10px;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background-color: var(--input-bg);
+    background: var(--input-bg);
     color: var(--text);
-    font-size: 0.95rem;
-    min-width: 200px;
-}
-
-#results-count {
-    text-align: center;
-    padding: 10px;
-    color: var(--subtext);
-    font-size: 0.9rem;
-}
-
-#loading {
-    text-align: center;
-    padding: 20px;
-    font-size: 1.2rem;
-    display: none;
 }
 
 #anime-container {
@@ -107,15 +76,9 @@ header p {
 }
 
 .anime-card {
-    background-color: var(--card-bg);
+    background: var(--card-bg);
     border-radius: 10px;
     overflow: hidden;
-    transition: transform 0.3s;
-    border: 1px solid var(--border);
-}
-
-.anime-card:hover {
-    transform: scale(1.05);
 }
 
 .anime-card img {
@@ -128,39 +91,8 @@ header p {
     padding: 10px;
 }
 
-.anime-info h3 {
-    font-size: 0.95rem;
-    margin-bottom: 6px;
-    color: var(--accent);
-}
-
-.anime-info p {
-    font-size: 0.8rem;
-    color: var(--subtext);
-    margin: 3px 0;
-}
-
-#no-results {
+#loading {
     text-align: center;
-    font-size: 1.2rem;
-    color: var(--subtext);
-    grid-column: 1 / -1;
-    padding: 50px;
-}
-
-@media (max-width: 600px) {
-    header h1 {
-        font-size: 1.8rem;
-    }
-
-    #controls {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #search-input,
-    #genre-filter,
-    #sort-select {
-        width: 100%;
-    }
+    padding: 20px;
+    display: none;
 }
